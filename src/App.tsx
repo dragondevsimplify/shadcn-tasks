@@ -1,19 +1,11 @@
 import './App.css'
-import { Button } from '@/components/ui/button'
-import { MouseEvent } from "react";
+import { Tasks } from "@/components/tasks/tasks.tsx";
 
 function App() {
-  function submit(e: MouseEvent<HTMLButtonElement>) {
-    console.log(e)
-    console.log(123)
-  }
-  
   return (
-    <>
-      <Button onClick={(e) => submit(e)}>Click me</Button>
-      <div>Hello</div>
-      <p className='mt-3'>ABC</p>
-    </>
+    <main className="p-4">
+      <Tasks />
+    </main>
   )
 }
 
