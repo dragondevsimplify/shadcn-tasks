@@ -10,7 +10,7 @@ export const taskSchema = z.object({
   type: z.string(),
   status: z.string(),
   priority: z.string(),
-})
+});
 
 export const createTaskSchema = z.object({
   title: z.string().min(1, {
@@ -26,6 +26,24 @@ export const createTaskSchema = z.object({
   priority: z.string().min(1, {
     message: 'Priority is required!'
   }),
-})
+});
 
-export type Task = z.infer<typeof taskSchema>
+export const updateTaskSchema = z.object({
+  title: z.string().min(1, {
+    message: 'Title is required!'
+  }),
+  description: z.string(),
+  type: z.string().min(1, {
+    message: 'Type is required!'
+  }),
+  status: z.string().min(1, {
+    message: 'Status is required!'
+  }),
+  priority: z.string().min(1, {
+    message: 'Priority is required!'
+  }),
+});
+
+export type TaskSchema = z.infer<typeof taskSchema>;
+export type CreateTaskSchema = z.infer<typeof createTaskSchema>;
+export type UpdateTaskSchema = z.infer<typeof updateTaskSchema>;

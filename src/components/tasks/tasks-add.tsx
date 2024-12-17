@@ -1,6 +1,5 @@
-import { createTaskSchema } from "@/schemas/tasks";
+import { CreateTaskSchema, createTaskSchema } from "@/schemas/tasks";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // Shadcn UI imports
@@ -33,32 +32,16 @@ import {
 import { CirclePlus } from "lucide-react";
 import Tiptap from "@/components/tiptap/tiptap.tsx";
 import { taskPriorities, taskStatuses, taskTypes } from '@/data/tasks'
-import { Task } from "@/models/tasks.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
-type CreateTask = z.infer<typeof createTaskSchema>;
-
-async function createTaskApi(task: CreateTask): Promise<Task> {
-  const res = await fetch('http://localhost:5245/tasks', {
-    method: "POST",
-    body: JSON.stringify(task),
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-  if (!res.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return res.json();
-}
+import { createTaskApi } from "@/apis/taskApi.ts";
 
 function TasksAdd() {
   const queryClient = useQueryClient();
   
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   
-  const form = useForm<z.infer<typeof createTaskSchema>>({
+  const form = useForm<CreateTaskSchema>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
       title: "",
@@ -86,7 +69,7 @@ function TasksAdd() {
     form.setValue("description", content)
   }
   
-  function formSubmit(values: CreateTask) {
+  function formSubmit(values: CreateTaskSchema) {
     createTaskMutation.mutate(values)
   }
   

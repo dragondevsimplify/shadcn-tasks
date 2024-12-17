@@ -11,14 +11,7 @@ import { TasksAdd } from "./tasks-add";
 import { useQuery } from '@tanstack/react-query';
 import { Task } from "@/models/tasks.ts";
 import { ResponseList } from "@/models/response.ts";
-
-async function getTaskListApi(): Promise<ResponseList<Task>> {
-  const res = await fetch('http://localhost:5245/tasks?GetAll=true');
-  if (!res.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return res.json();
-}
+import { getTaskListApi } from "@/apis/taskApi.ts";
 
 function Tasks() {
   const { data: getTaskListRes, error, isLoading } = useQuery<ResponseList<Task>, Error>({
