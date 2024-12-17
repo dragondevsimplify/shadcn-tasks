@@ -10,12 +10,12 @@ export async function createTaskApi(task: CreateTaskSchema): Promise<Task> {
   return res.data;
 }
 
-export async function updateTask(taskId: number, updatedTask: UpdateTaskSchema) {
+export async function updateTaskApi(taskId: number, updatedTask: UpdateTaskSchema) {
   const res = await axios.put(`${API_URL}/${taskId}`, updatedTask);
   return res.data;
 }
 
-export async function deleteTask(taskId: number) {
+export async function deleteTaskApi(taskId: number) {
   const res = await axios.delete(`${API_URL}/${taskId}`);
   return res.data;
 }

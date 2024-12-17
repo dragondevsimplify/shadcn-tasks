@@ -8,16 +8,10 @@ import {
 import { TasksTable } from "@/components/tasks/tasks-table.tsx";
 import { columns } from "@/components/tasks/tasks-columns.tsx";
 import { TasksAdd } from "./tasks-add";
-import { useQuery } from '@tanstack/react-query';
-import { Task } from "@/models/tasks.ts";
-import { ResponseList } from "@/models/response.ts";
-import { getTaskListApi } from "@/apis/taskApi.ts";
+import { useTasks } from "@/hooks/useTasks.ts";
 
 function Tasks() {
-  const { data: getTaskListRes, error, isLoading } = useQuery<ResponseList<Task>, Error>({
-    queryKey: ['getTaskList'],
-    queryFn: getTaskListApi,
-  });
+  const { tasks, isLoading, error } = useTasks();
   
   if (isLoading) {
     return <div>Loading...</div>
@@ -41,7 +35,7 @@ function Tasks() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <TasksTable columns={columns} data={getTaskListRes?.list ?? []} />
+        <TasksTable columns={columns} data={tasks ?? []} />
       </CardContent>
     </Card>
   );

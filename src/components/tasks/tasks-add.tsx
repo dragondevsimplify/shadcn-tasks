@@ -32,12 +32,11 @@ import {
 import { CirclePlus } from "lucide-react";
 import Tiptap from "@/components/tiptap/tiptap.tsx";
 import { taskPriorities, taskStatuses, taskTypes } from '@/data/tasks'
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { createTaskApi } from "@/apis/taskApi.ts";
+import { useTasks } from '@/hooks/useTasks'
 
 function TasksAdd() {
-  const queryClient = useQueryClient();
+  const { createTask } = useTasks();
   
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   
@@ -52,15 +51,6 @@ function TasksAdd() {
     },
   });
   
-  const createTaskMutation = useMutation({
-    mutationKey: ['createTask'],
-    mutationFn: createTaskApi,
-    onSuccess: async() => {
-      await queryClient.invalidateQueries(['getTaskList'])
-      setIsOpenDialog(false);
-    }
-  })
-  
   function interactOutside(e: Event) {
     e.preventDefault();
   }
@@ -70,7 +60,8 @@ function TasksAdd() {
   }
   
   function formSubmit(values: CreateTaskSchema) {
-    createTaskMutation.mutate(values)
+    createTask(values)
+    setIsOpenDialog(false);
   }
   
   return (
