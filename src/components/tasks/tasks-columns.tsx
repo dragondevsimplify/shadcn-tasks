@@ -4,20 +4,7 @@ import { TasksColumnHeader } from "@/components/tasks/tasks-column-header.tsx";
 import { Badge } from "@/components/ui/badge"
 import { taskTypes, taskPriorities, taskStatuses } from '@/data/tasks';
 import { TasksRowActions } from "./tasks-row-actions";
-
-export type TaskType = 'bug' | 'feature' | 'documentation'
-export type TaskStatus = 'todo' | 'backlog' | 'in_progress' | 'done' | 'cancelled'
-export type TaskPriority = 'low' | 'medium' | 'high'
-
-export interface Task {
-  id: number;
-  name: string;
-  title: string;
-  description: string;
-  type: TaskType;
-  status: TaskStatus;
-  priority: TaskPriority;
-}
+import { Task } from "@/models/tasks.ts";
 
 export const columns: ColumnDef<Task>[] = [
   {

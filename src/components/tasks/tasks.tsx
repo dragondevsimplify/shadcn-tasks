@@ -6,42 +6,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TasksTable } from "@/components/tasks/tasks-table.tsx";
-import { Task, columns } from "@/components/tasks/tasks-columns.tsx";
+import { columns } from "@/components/tasks/tasks-columns.tsx";
 import { TasksAdd } from "./tasks-add";
+import { useQuery } from '@tanstack/react-query';
+import { Task } from "@/models/tasks.ts";
+import { ResponseList } from "@/models/response.ts";
+
+const getTaskListApi = async (): Promise<ResponseList<Task>> => {
+  const response = await fetch('http://localhost:5245/tasks?GetAll=true');
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 function Tasks() {
-  const data: Task[] = [
-    {
-      id: 1,
-      name: "Task-8782",
-      title:
-        "You can't compress the program without quantifying the open-source SSD",
-      description: '',
-      type: "documentation",
-      status: "in_progress",
-      priority: "medium",
-    },
-    {
-      id: 2,
-      name: "Task-7878",
-      title:
-        "Try to calculate the EXE feed, maybe it will index the multi-byte pixel!",
-      description: '',
-      type: "feature",
-      status: "backlog",
-      priority: "medium",
-    },
-    {
-      id: 3,
-      name: "Task-7839",
-      title: "We need to bypass the neural TCP card!",
-      description: '',
-      type: "bug",
-      status: "todo",
-      priority: "high",
-    },
-  ];
-
+  const { data: getTaskListRes, error, isLoading } = useQuery<ResponseList<Task>, Error>({
+    queryKey: ['getTaskList'],
+    queryFn: getTaskListApi,
+  });
+  
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+  
+  if (error instanceof Error) {
+    return <div>Error: {error.message}</div>
+  }
+  
   return (
     <Card>
       <CardHeader>
@@ -56,7 +48,7 @@ function Tasks() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <TasksTable columns={columns} data={data} />
+        <TasksTable columns={columns} data={getTaskListRes?.list ?? []} />
       </CardContent>
     </Card>
   );
