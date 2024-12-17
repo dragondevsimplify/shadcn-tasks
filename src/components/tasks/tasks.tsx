@@ -16,6 +16,7 @@ function Tasks() {
       name: "Task-8782",
       title:
         "You can't compress the program without quantifying the open-source SSD",
+      description: '',
       type: "documentation",
       status: "in_progress",
       priority: "medium",
@@ -25,6 +26,7 @@ function Tasks() {
       name: "Task-7878",
       title:
         "Try to calculate the EXE feed, maybe it will index the multi-byte pixel!",
+      description: '',
       type: "feature",
       status: "backlog",
       priority: "medium",
@@ -33,6 +35,7 @@ function Tasks() {
       id: 3,
       name: "Task-7839",
       title: "We need to bypass the neural TCP card!",
+      description: '',
       type: "bug",
       status: "todo",
       priority: "high",

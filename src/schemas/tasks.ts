@@ -6,6 +6,17 @@ export const taskSchema = z.object({
   id: z.number(),
   name: z.string(),
   title: z.string(),
+  description: z.string(),
+  type: z.string(),
+  status: z.string(),
+  priority: z.string(),
+})
+
+export const createTaskSchema = z.object({
+  title: z.string().min(1, {
+    message: 'Title is required!'
+  }),
+  description: z.string(),
   type: z.string(),
   status: z.string(),
   priority: z.string(),
