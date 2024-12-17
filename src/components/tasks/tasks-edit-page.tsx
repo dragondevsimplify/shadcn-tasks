@@ -6,7 +6,7 @@ import { taskPriorities, taskStatuses, taskTypes } from "@/data/tasks.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useTasks } from "@/hooks/useTasks.ts";
 import { useForm } from "react-hook-form";
-import { createTaskSchema, CreateTaskSchema } from "@/schemas/tasks.ts";
+import { createTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
 import { getTaskByIdApi } from "@/apis/tasksApi.ts";
@@ -14,7 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Task } from "@/models/tasks.ts";
 
 export function TasksEditPage() {
-  const { createTask } = useTasks();
+  const { updateTask } = useTasks();
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -23,7 +23,7 @@ export function TasksEditPage() {
     queryFn: loadTask,
   })
   
-  const form = useForm<CreateTaskSchema>({
+  const form = useForm<UpdateTaskSchema>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
       title: "",
@@ -40,7 +40,6 @@ export function TasksEditPage() {
     }
     
     const task = await getTaskByIdApi(+id);
-    console.log(task, isFetching);
     form.reset(task);
     return task;
   }
@@ -49,9 +48,13 @@ export function TasksEditPage() {
     form.setValue("description", content);
   }
   
-  function formSubmit(values: CreateTaskSchema) {
-    createTask(values, () => {
-      //
+  function formSubmit(values: UpdateTaskSchema) {
+    if (!id) {
+      return;
+    }
+    
+    updateTask(+id, values, () => {
+      navigate("/");
     })
   }
   

@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai';
 import { tasksAtom, isLoadingAtom, errorAtom } from '@/atoms/tasksAtom.ts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getTaskListApi, createTaskApi, deleteTaskApi } from '@/apis/tasksApi.ts';
+import { getTaskListApi, createTaskApi, deleteTaskApi, updateTaskApi } from '@/apis/tasksApi.ts';
 import { ResponseList } from "@/models/response.ts";
 import { Task } from "@/models/tasks.ts";
-import { CreateTaskSchema } from "@/schemas/tasks.ts";
+import { CreateTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useAtom(tasksAtom);
@@ -28,9 +28,36 @@ export const useTasks = () => {
     mutationKey: ['createTask'],
     mutationFn: async(action: {
       newTask: CreateTaskSchema,
-      successCallback: Function,
+      successCallback: () => void,
     }) => {
       const res = await createTaskApi(action.newTask);
+      return {
+        response: res,
+        successCallback: action.successCallback
+      }
+    },
+    onSuccess: async({ response, successCallback }) => {
+      await queryClient.invalidateQueries(['getTaskList']);
+      
+      // Invoke callback
+      if (successCallback && typeof successCallback === 'function') {
+        successCallback()
+      }
+    },
+    onError: (err) => {
+      setError(err as Error);
+    },
+  });
+  
+  // UPDATE Task
+  const updateMutation = useMutation({
+    mutationKey: ['updateTask'],
+    mutationFn: async(action: {
+      taskId: number,
+      task: UpdateTaskSchema,
+      successCallback: () => void,
+    }) => {
+      const res = await updateTaskApi(taskId, action.task);
       return {
         response: res,
         successCallback: action.successCallback
@@ -54,7 +81,7 @@ export const useTasks = () => {
     mutationKey: ['deleteTask'],
     mutationFn: async(action: {
       taskId: number,
-      successCallback: Function,
+      successCallback: () => void,
     }) => {
       const res = await deleteTaskApi(action.taskId);
       return {
@@ -75,11 +102,15 @@ export const useTasks = () => {
     },
   });
   
-  const createTaskHandler = (newTask: CreateTaskSchema, successCallback: Function) => {
+  const createTaskHandler = (newTask: CreateTaskSchema, successCallback: () => void) => {
     createMutation.mutate({ newTask, successCallback })
   }
   
-  const deleteTaskHandler = (taskId: number, successCallback: Function) => {
+  const updateTaskHandler = (taskId: number, task: UpdateTaskSchema, successCallback: () => void) => {
+    updateMutation.mutate({ taskId, task, successCallback })
+  }
+  
+  const deleteTaskHandler = (taskId: number, successCallback: () => void) => {
     deleteMutation.mutate({ taskId, successCallback })
   }
   
@@ -88,6 +119,7 @@ export const useTasks = () => {
     isLoading: queryLoading || isLoading,
     error,
     createTask: createTaskHandler,
+    updateTask: updateTaskHandler,
     deleteTask: deleteTaskHandler,
   };
 };
