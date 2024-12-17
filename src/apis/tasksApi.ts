@@ -20,6 +20,11 @@ export async function deleteTaskApi(taskId: number) {
   return res.data;
 }
 
+export async function getTaskByIdApi(taskId: number) {
+  const res = await axios.get<Task>(API_URL + '/' + taskId);
+  return res.data;
+}
+
 export async function getTaskListApi() {
   const params = new URLSearchParams();
   params.append('GetAll', 'true')

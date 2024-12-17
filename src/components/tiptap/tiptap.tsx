@@ -3,7 +3,7 @@ import './tiptap.css'
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
-import { EditorEvents, EditorProvider, useCurrentEditor } from '@tiptap/react'
+import { Editor, EditorEvents, EditorProvider, useCurrentEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 const MenuBar = () => {
@@ -202,8 +202,17 @@ interface Props {
 }
 
 function TipTapEditor({ content, onBlur = () => {} }: Props) {
-  function blur(e: EditorEvents["blur"]) {
+  
+  function handleBlur(e: EditorEvents["blur"]) {
     onBlur(e.editor.getHTML())
+  }
+  
+  function handleCreate({ editor }: {
+    editor: Editor;
+  }) {
+    if (content) {
+      editor.commands.setContent(content)
+    }
   }
   
   return (
@@ -211,7 +220,8 @@ function TipTapEditor({ content, onBlur = () => {} }: Props) {
       slotBefore={<MenuBar />}
       extensions={extensions}
       content={content}
-      onBlur={blur}
+      onBlur={handleBlur}
+      onCreate={handleCreate}
     >
     </EditorProvider>
   )

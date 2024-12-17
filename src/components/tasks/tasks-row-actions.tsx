@@ -22,12 +22,14 @@ import {
 import { taskSchema } from "@/schemas/tasks";
 import { useTasks } from "@/hooks/useTasks.ts";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 interface TasksRowActionsProps<TData> {
   row: Row<TData>;
 }
 
 export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
+  const navigate = useNavigate();
   const { deleteTask } = useTasks()
   const [isShowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
   
@@ -43,6 +45,14 @@ export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
     })
   }
   
+  function handleRedirectToEditPage() {
+    navigate(`tasks/edit/${task.id}`)
+  }
+  
+  function handleRedirectToEditSheet() {
+  
+  }
+  
   return (
     <>
       <DropdownMenu>
@@ -56,8 +66,8 @@ export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem>Edit with page</DropdownMenuItem>
-          <DropdownMenuItem>Edit with sheet</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleRedirectToEditPage}>Edit with page</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleRedirectToEditSheet}>Edit with sheet</DropdownMenuItem>
           <DropdownMenuItem onClick={handleShowDeleteConfirm}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
