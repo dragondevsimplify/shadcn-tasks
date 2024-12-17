@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Avoid pointer event: none when open alert/dialog Radix UI */
+body {
+  pointer-events: auto !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
