@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Tiptap from "@/components/tiptap/tiptap.tsx";
 
 function TasksAdd() {
   const form = useForm<z.infer<typeof createTaskSchema>>({
@@ -37,6 +38,10 @@ function TasksAdd() {
   
   function interactOutside(e: Event) {
     e.preventDefault();
+  }
+  
+  function bindingDescription(content: string) {
+    form.setValue("description", content)
   }
   
   function formSubmit(values: z.infer<typeof createTaskSchema>) {
@@ -78,10 +83,7 @@ function TasksAdd() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage/>
+                  <Tiptap content={field.value} onBlur={bindingDescription} />
                 </FormItem>
               )}
             />
