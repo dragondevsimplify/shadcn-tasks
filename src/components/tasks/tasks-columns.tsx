@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TasksColumnHeader } from "@/components/tasks/tasks-column-header.tsx";
 import { Badge } from "@/components/ui/badge"
-import { labels, priorities, statuses } from '@/data/tasks';
+import { taskTypes, taskPriorities, taskStatuses } from '@/data/tasks';
 import { TasksRowActions } from "./tasks-row-actions";
 
 export type TaskType = 'bug' | 'feature' | 'documentation'
@@ -59,7 +59,7 @@ export const columns: ColumnDef<Task>[] = [
       <TasksColumnHeader column={column} title="Title"/>
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.type)
+      const label = taskTypes.find((label) => label.value === row.original.type)
       
       return (
         <div className="flex space-x-2">
@@ -77,7 +77,7 @@ export const columns: ColumnDef<Task>[] = [
       <TasksColumnHeader column={column} title="Status"/>
     ),
     cell: ({ row }) => {
-      const status = statuses.find(
+      const status = taskStatuses.find(
         (status) => status.value === row.getValue("status")
       )
       
@@ -104,7 +104,7 @@ export const columns: ColumnDef<Task>[] = [
       <TasksColumnHeader column={column} title="Priority"/>
     ),
     cell: ({ row }) => {
-      const priority = priorities.find(
+      const priority = taskPriorities.find(
         (priority) => priority.value === row.getValue("priority")
       )
       

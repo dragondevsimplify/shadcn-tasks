@@ -1,0 +1,12 @@
+.form-ctrl-required {
+  position: relative;
+}
+
+.form-ctrl-required::after {
+  content: '*';
+  color: red;
+  display: block;
+  position: absolute;
+  top: 4px;
+  right: -8px;
+}

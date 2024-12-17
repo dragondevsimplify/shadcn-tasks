@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { CirclePlus } from "lucide-react";
+// Shadcn UI imports
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -22,7 +22,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+import { CirclePlus } from "lucide-react";
 import Tiptap from "@/components/tiptap/tiptap.tsx";
+import { taskPriorities, taskStatuses, taskTypes } from '@/data/tasks'
 
 function TasksAdd() {
   const form = useForm<z.infer<typeof createTaskSchema>>({
@@ -69,7 +79,7 @@ function TasksAdd() {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel className='form-ctrl-required'>Title</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -84,6 +94,72 @@ function TasksAdd() {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <Tiptap content={field.value} onBlur={bindingDescription} />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='form-ctrl-required'>Type</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {taskTypes.map(type =>
+                        <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='form-ctrl-required'>Status</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {taskStatuses.map(type =>
+                        <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="priority"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='form-ctrl-required'>Priority</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a priority" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {taskPriorities.map(type =>
+                        <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
                 </FormItem>
               )}
             />

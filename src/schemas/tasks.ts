@@ -17,9 +17,15 @@ export const createTaskSchema = z.object({
     message: 'Title is required!'
   }),
   description: z.string(),
-  type: z.string(),
-  status: z.string(),
-  priority: z.string(),
+  type: z.string().min(1, {
+    message: 'Type is required!'
+  }),
+  status: z.string().min(1, {
+    message: 'Status is required!'
+  }),
+  priority: z.string().min(1, {
+    message: 'Priority is required!'
+  }),
 })
 
 export type Task = z.infer<typeof taskSchema>

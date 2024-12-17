@@ -9,7 +9,7 @@ import {
   Timer,
 } from "lucide-react"
 
-export const labels = [
+export const taskTypes = [
   {
     value: "bug",
     label: "Bug",
@@ -24,7 +24,7 @@ export const labels = [
   },
 ]
 
-export const statuses = [
+export const taskStatuses = [
   {
     value: "backlog",
     label: "Backlog",
@@ -52,7 +52,7 @@ export const statuses = [
   },
 ]
 
-export const priorities = [
+export const taskPriorities = [
   {
     label: "Low",
     value: "low",
