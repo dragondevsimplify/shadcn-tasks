@@ -51,22 +51,34 @@ function TasksAdd() {
     },
   });
   
+  function dialogOpenChange(open: boolean) {
+    setIsOpenDialog(open);
+    if (!open) {
+      dialogClosed();
+    }
+  }
+  
+  function dialogClosed() {
+    form.reset();
+  }
+  
   function interactOutside(e: Event) {
     e.preventDefault();
   }
   
   function bindingDescription(content: string) {
-    form.setValue("description", content)
+    form.setValue("description", content);
   }
   
   function formSubmit(values: CreateTaskSchema) {
     createTask(values, () => {
       setIsOpenDialog(false);
+      dialogClosed();
     })
   }
   
   return (
-    <Dialog open={isOpenDialog} onOpenChange={setIsOpenDialog}>
+    <Dialog open={isOpenDialog} onOpenChange={dialogOpenChange}>
       <DialogTrigger asChild>
         <Button>
           <CirclePlus/>
