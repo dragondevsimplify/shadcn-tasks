@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai';
 import { tasksAtom, isLoadingAtom, errorAtom } from '@/atoms/tasksAtom.ts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getTaskListApi, createTaskApi } from '@/apis/tasksApi.ts';
+import { getTaskListApi, createTaskApi, deleteTaskApi } from '@/apis/tasksApi.ts';
 import { ResponseList } from "@/models/response.ts";
 import { Task } from "@/models/tasks.ts";
 import { CreateTaskSchema } from "@/schemas/tasks.ts";
@@ -16,7 +16,11 @@ export const useTasks = () => {
   // GET Tasks
   const { data: getTaskListRes, isLoading: queryLoading } = useQuery<ResponseList<Task>, Error>({
     queryKey: ['getTaskList'],
-    queryFn: getTaskListApi,
+    queryFn: async() => {
+      const res = await getTaskListApi()
+      setTasks(res.list ?? [])
+      return res;
+    },
   });
   
   // CREATE Task
@@ -28,17 +32,42 @@ export const useTasks = () => {
     }) => {
       const res = await createTaskApi(action.newTask);
       return {
-        newTask: res,
+        response: res,
         successCallback: action.successCallback
       }
     },
-    onSuccess: (payload) => {
-      setTasks((prevTasks) => [...prevTasks, payload.newTask]);
-      queryClient.invalidateQueries(['getTaskList']);
+    onSuccess: async({ response, successCallback }) => {
+      await queryClient.invalidateQueries(['getTaskList']);
       
       // Invoke callback
-      if (payload.successCallback && typeof payload.successCallback === 'function') {
-        payload.successCallback()
+      if (successCallback && typeof successCallback === 'function') {
+        successCallback()
+      }
+    },
+    onError: (err) => {
+      setError(err as Error);
+    },
+  });
+  
+  // DELETE Task
+  const deleteMutation = useMutation({
+    mutationKey: ['deleteTask'],
+    mutationFn: async(action: {
+      taskId: number,
+      successCallback: Function,
+    }) => {
+      const res = await deleteTaskApi(action.taskId);
+      return {
+        response: res,
+        successCallback: action.successCallback
+      }
+    },
+    onSuccess: async({ response, successCallback }) => {
+      await queryClient.invalidateQueries(['getTaskList']);
+      
+      // Invoke callback
+      if (successCallback && typeof successCallback === 'function') {
+        successCallback()
       }
     },
     onError: (err) => {
@@ -50,10 +79,15 @@ export const useTasks = () => {
     createMutation.mutate({ newTask, successCallback })
   }
   
+  const deleteTaskHandler = (taskId: number, successCallback: Function) => {
+    deleteMutation.mutate({ taskId, successCallback })
+  }
+  
   return {
     tasks: getTaskListRes?.list || tasks,
     isLoading: queryLoading || isLoading,
     error,
     createTask: createTaskHandler,
+    deleteTask: deleteTaskHandler,
   };
 };
