@@ -5,18 +5,18 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:5245/tasks';
 
-export async function createTaskApi(task: CreateTaskSchema): Promise<Task> {
-  const res = await axios.post<Promise<Task>>(API_URL, task);
+export async function createTaskApi(task: CreateTaskSchema) {
+  const res = await axios.post<Task>(API_URL, task);
   return res.data;
 }
 
 export async function updateTaskApi(taskId: number, updatedTask: UpdateTaskSchema) {
-  const res = await axios.put(`${API_URL}/${taskId}`, updatedTask);
+  const res = await axios.put<Task>(`${API_URL}/${taskId}`, updatedTask);
   return res.data;
 }
 
 export async function deleteTaskApi(taskId: number) {
-  const res = await axios.delete(`${API_URL}/${taskId}`);
+  const res = await axios.delete<Task>(`${API_URL}/${taskId}`);
   return res.data;
 }
 

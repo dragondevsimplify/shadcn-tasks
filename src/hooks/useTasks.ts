@@ -37,12 +37,12 @@ export const useTasks = () => {
       }
     },
     onSuccess: async({ response, successCallback }) => {
-      await queryClient.invalidateQueries(['getTaskList']);
-      
       // Invoke callback
       if (successCallback && typeof successCallback === 'function') {
         successCallback()
       }
+      
+      queryClient.invalidateQueries(['getTaskList']);
     },
     onError: (err) => {
       setError(err as Error);
@@ -57,19 +57,19 @@ export const useTasks = () => {
       task: UpdateTaskSchema,
       successCallback: () => void,
     }) => {
-      const res = await updateTaskApi(taskId, action.task);
+      const res = await updateTaskApi(action.taskId, action.task);
       return {
         response: res,
         successCallback: action.successCallback
       }
     },
     onSuccess: async({ response, successCallback }) => {
-      await queryClient.invalidateQueries(['getTaskList']);
-      
       // Invoke callback
       if (successCallback && typeof successCallback === 'function') {
         successCallback()
       }
+      
+      queryClient.invalidateQueries(['getTaskList']);
     },
     onError: (err) => {
       setError(err as Error);
@@ -90,12 +90,12 @@ export const useTasks = () => {
       }
     },
     onSuccess: async({ response, successCallback }) => {
-      await queryClient.invalidateQueries(['getTaskList']);
-      
       // Invoke callback
       if (successCallback && typeof successCallback === 'function') {
         successCallback()
       }
+      
+      queryClient.invalidateQueries(['getTaskList']);
     },
     onError: (err) => {
       setError(err as Error);

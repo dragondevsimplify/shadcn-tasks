@@ -10,18 +10,18 @@ import { createTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
 import { getTaskByIdApi } from "@/apis/tasksApi.ts";
-import { useQuery } from "@tanstack/react-query";
-import { Task } from "@/models/tasks.ts";
+import { useEffect, useState } from "react";
 
 export function TasksEditPage() {
   const { updateTask } = useTasks();
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const { isFetching } = useQuery<Task | null | undefined, Error>({
-    queryKey: ['getTaskById'],
-    queryFn: loadTask,
-  })
+  // const { isFetching } = useQuery<Task | null | undefined, Error>({
+  //   queryKey: ['getTaskById'],
+  //   queryFn: loadTask,
+  // })
+  const [isFetching, setIsFetching] = useState(true);
   
   const form = useForm<UpdateTaskSchema>({
     resolver: zodResolver(createTaskSchema),
@@ -34,13 +34,20 @@ export function TasksEditPage() {
     },
   });
   
+  useEffect(() => {
+    loadTask();
+  }, []);
+  
   async function loadTask() {
     if (!id) {
       return;
     }
     
     const task = await getTaskByIdApi(+id);
+    
     form.reset(task);
+    setIsFetching(false);
+    
     return task;
   }
   
