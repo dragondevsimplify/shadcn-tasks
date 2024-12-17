@@ -60,8 +60,9 @@ function TasksAdd() {
   }
   
   function formSubmit(values: CreateTaskSchema) {
-    createTask(values)
-    setIsOpenDialog(false);
+    createTask(values, () => {
+      setIsOpenDialog(false);
+    })
   }
   
   return (
