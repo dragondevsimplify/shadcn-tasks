@@ -72,6 +72,7 @@ export function TasksToolbox() {
       <TasksFilterSelect
         ref={statusFilter}
         title="Status"
+        defaultSelected={searchInfoList.statuses.split(',')}
         options={taskStatuses}
         onSelect={(v) => handleFilterSelect('statuses', v)}
         onClear={handleClearFilter}
@@ -79,6 +80,7 @@ export function TasksToolbox() {
       <TasksFilterSelect
         ref={priorityFilter}
         title="Priority"
+        defaultSelected={searchInfoList.priorities.split(',')}
         options={taskPriorities}
         onSelect={(v) => handleFilterSelect('priorities', v)}
         onClear={handleClearFilter}

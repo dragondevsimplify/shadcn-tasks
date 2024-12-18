@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
-import { forwardRef, Ref, useImperativeHandle, useState } from "react";
+import { forwardRef, Ref, useEffect, useImperativeHandle, useState } from "react";
 
 interface OptionItem {
   label: string;
@@ -29,6 +29,7 @@ interface OptionItem {
 
 interface Props {
   title?: string;
+  defaultSelected?: string[];
   options: OptionItem[];
   onSelect: (selectedItems: string[]) => void;
   onClear: () => void;
@@ -40,6 +41,7 @@ export interface TasksFilterSelectRef {
 
 const TasksFilterSelect = forwardRef(({
   title,
+  defaultSelected,
   options,
   onSelect,
   onClear,
@@ -63,6 +65,10 @@ const TasksFilterSelect = forwardRef(({
     setSelectedValues([])
     onClear()
   }
+  
+  useEffect(() => {
+    setSelectedValues(defaultSelected)
+  }, [defaultSelected])
   
   useImperativeHandle(ref, () => {
     return {
