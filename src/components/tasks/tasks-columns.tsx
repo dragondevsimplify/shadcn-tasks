@@ -37,8 +37,6 @@ export const columns: ColumnDef<Task>[] = [
       <TasksColumnHeader column={column} title="Task"/>
     ),
     cell: ({ row }) => <div className="w-[80px] font-semibold uppercase">{row.getValue("name")}</div>,
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "title",
