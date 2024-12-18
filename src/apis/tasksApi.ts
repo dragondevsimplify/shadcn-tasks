@@ -2,6 +2,7 @@ import { Task } from "@/models/tasks.ts";
 import { CreateTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 import { ResponseList } from "@/models/response.ts";
 import axios from 'axios';
+import { Pagination } from "@/models/pagination.ts";
 
 const API_URL = 'http://localhost:5245/tasks';
 
@@ -25,10 +26,16 @@ export async function getTaskByIdApi(taskId: number) {
   return res.data;
 }
 
-export async function getTaskListApi() {
+export async function getTaskListApi(pagination?: Pagination) {
   const params = new URLSearchParams();
-  params.append('GetAll', 'true')
   
+  if (!pagination) {
+    params.append('GetAll', 'true')
+  } else {
+    params.append('Page', pagination.pageNumber + '')
+    params.append('PageSize', pagination.pageSize + '')
+  }
+
   const res = await axios.get<ResponseList<Task>>(API_URL, {
     params
   });

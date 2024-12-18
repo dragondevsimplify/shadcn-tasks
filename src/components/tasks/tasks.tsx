@@ -1,3 +1,4 @@
+import { useTasks } from "@/hooks/useTasks.ts";
 import {
   Card,
   CardContent,
@@ -8,7 +9,7 @@ import {
 import { TasksTable } from "@/components/tasks/tasks-table.tsx";
 import { columns } from "@/components/tasks/tasks-columns.tsx";
 import { TasksAdd } from "./tasks-add";
-import { useTasks } from "@/hooks/useTasks.ts";
+import { TasksPagination } from "@/components/tasks/tasks-pagination.tsx";
 
 function Tasks() {
   const { tasks, isLoading, error } = useTasks();
@@ -36,6 +37,7 @@ function Tasks() {
       </CardHeader>
       <CardContent>
         <TasksTable columns={columns} data={tasks ?? []} />
+        <TasksPagination />
       </CardContent>
     </Card>
   );

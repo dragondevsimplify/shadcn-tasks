@@ -29,7 +29,7 @@ function TasksTable<TData, TValue>({
   })
   
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border my-4">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
