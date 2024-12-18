@@ -7,7 +7,7 @@ import { TasksFilterSelect, TasksFilterSelectRef } from "@/components/tasks/task
 import { taskPriorities, taskStatuses } from "@/data/tasks.ts";
 
 export function TasksToolbox() {
-  const { searchInfoList, setSearchInfoList } = useTasks();
+  const { searchInfoList, setSearchInfoList, setPagination } = useTasks();
   
   const [searchValue, setSearchValue] = useState("");
   const debouncedValue = useDebounce(searchValue, 500)
@@ -50,6 +50,14 @@ export function TasksToolbox() {
   }
   
   function handleReset() {
+    setPagination({
+      pageNumber: 1,
+      pageSize: 5,
+      pageSizeOptions: [3, 5, 10],
+      totalItems: 0,
+      totalPages: 0,
+      listLength: 0,
+    })
     setSearchInfoList({
       title: '',
       types: '',

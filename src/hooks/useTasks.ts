@@ -1,11 +1,12 @@
 import { useAtom } from 'jotai';
 import { tasksAtom, isLoadingAtom, errorAtom, paginationAtom, searchInfoListAtom } from '@/atoms/tasksAtom.ts';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTaskListApi, createTaskApi, deleteTaskApi, updateTaskApi } from '@/apis/tasksApi.ts';
 import { ResponseList } from "@/models/response.ts";
 import { Task, TaskSearchInfoList } from "@/models/tasks.ts";
 import { CreateTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 import { Pagination } from "@/models/pagination.ts";
+import { useState } from "react";
 
 export const useTasks = () => {
   const [tasks, setTasks] = useAtom(tasksAtom);
