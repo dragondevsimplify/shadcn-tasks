@@ -1,3 +1,7 @@
+import { taskSchema } from "@/schemas/tasks";
+import { useTasks } from "@/hooks/useTasks.ts";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 import { Row } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 
@@ -19,10 +23,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 
-import { taskSchema } from "@/schemas/tasks";
-import { useTasks } from "@/hooks/useTasks.ts";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { TasksEditSheet } from "@/components/tasks/tasks-edit-sheet.tsx";
+import { Task } from "@/models/tasks.ts";
 
 interface TasksRowActionsProps<TData> {
   row: Row<TData>;
@@ -32,8 +34,9 @@ export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
   const navigate = useNavigate();
   const { deleteTask } = useTasks()
   const [isShowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
+  const [isOpenEditSheet, setIsOpenEditSheet] = useState(false);
   
-  const task = taskSchema.parse(row.original);
+  const task = taskSchema.parse(row.original) as Task;
   
   function handleShowDeleteConfirm() {
     setIsShowDeleteConfirm(true);
@@ -49,8 +52,8 @@ export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
     navigate(`tasks/edit/${task.id}`)
   }
   
-  function handleRedirectToEditSheet() {
-  
+  function handleOpenEditSheet() {
+    setIsOpenEditSheet(true);
   }
   
   return (
@@ -67,10 +70,11 @@ export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem onClick={handleRedirectToEditPage}>Edit with page</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleRedirectToEditSheet}>Edit with sheet</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleOpenEditSheet}>Edit with sheet</DropdownMenuItem>
           <DropdownMenuItem onClick={handleShowDeleteConfirm}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      
       <AlertDialog open={isShowDeleteConfirm} onOpenChange={setIsShowDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -85,6 +89,8 @@ export function TasksRowActions<TData>({ row }: TasksRowActionsProps<TData>) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      <TasksEditSheet task={task} isOpen={isOpenEditSheet} setIsOpen={setIsOpenEditSheet} />
     </>
   );
 }
