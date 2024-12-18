@@ -1,4 +1,4 @@
-import { Task } from "@/models/tasks.ts";
+import { Task, TaskSearchInfoList } from "@/models/tasks.ts";
 import { CreateTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 import { ResponseList } from "@/models/response.ts";
 import axios from 'axios';
@@ -26,7 +26,7 @@ export async function getTaskByIdApi(taskId: number) {
   return res.data;
 }
 
-export async function getTaskListApi(pagination?: Pagination) {
+export async function getTaskListApi(pagination?: Pagination, searchInfoList?: TaskSearchInfoList) {
   const params = new URLSearchParams();
   
   if (!pagination) {
@@ -34,6 +34,14 @@ export async function getTaskListApi(pagination?: Pagination) {
   } else {
     params.append('Page', pagination.pageNumber + '')
     params.append('PageSize', pagination.pageSize + '')
+  }
+  
+  if (searchInfoList) {
+    for (const k in searchInfoList) {
+      // @ts-ignore
+      const v = searchInfoList[k];
+      params.append(k.charAt(0).toUpperCase() + k.slice(1), `${v}`);
+    }
   }
 
   const res = await axios.get<ResponseList<Task>>(API_URL, {

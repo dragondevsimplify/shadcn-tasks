@@ -1,9 +1,9 @@
 import { useAtom } from 'jotai';
-import { tasksAtom, isLoadingAtom, errorAtom, paginationAtom } from '@/atoms/tasksAtom.ts';
+import { tasksAtom, isLoadingAtom, errorAtom, paginationAtom, searchInfoListAtom } from '@/atoms/tasksAtom.ts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTaskListApi, createTaskApi, deleteTaskApi, updateTaskApi } from '@/apis/tasksApi.ts';
 import { ResponseList } from "@/models/response.ts";
-import { Task } from "@/models/tasks.ts";
+import { Task, TaskSearchInfoList } from "@/models/tasks.ts";
 import { CreateTaskSchema, UpdateTaskSchema } from "@/schemas/tasks.ts";
 import { Pagination } from "@/models/pagination.ts";
 
@@ -12,14 +12,15 @@ export const useTasks = () => {
   const [isLoading] = useAtom(isLoadingAtom);
   const [error, setError] = useAtom(errorAtom);
   const [pagination, setPagination] = useAtom(paginationAtom);
+  const [searchInfoList, setSearchInfoList] = useAtom(searchInfoListAtom);
   
   const queryClient = useQueryClient();
   
   // GET Tasks
   const { data: getTaskListRes, isLoading: queryLoading } = useQuery<ResponseList<Task>, Error>({
-    queryKey: ['getTaskList', pagination],
+    queryKey: ['getTaskList', pagination, searchInfoList],
     queryFn: async() => {
-      const res = await getTaskListApi(pagination)
+      const res = await getTaskListApi(pagination, searchInfoList);
       
       setTasks(res.list ?? [])
       setPagination(prevState => ({
@@ -124,7 +125,11 @@ export const useTasks = () => {
   }
   
   const changePaginationHandler = (pagination: Pagination) => {
-    setPagination({...pagination});
+    setPagination({ ...pagination });
+  }
+  
+  const changeSearchInfoListHandler = (searchInfoList: TaskSearchInfoList) => {
+    setSearchInfoList({ ...searchInfoList });
   }
   
   return {
@@ -132,7 +137,9 @@ export const useTasks = () => {
     isLoading: queryLoading || isLoading,
     error,
     pagination,
+    searchInfoList,
     setPagination: changePaginationHandler,
+    setSearchInfoList: changeSearchInfoListHandler,
     createTask: createTaskHandler,
     updateTask: updateTaskHandler,
     deleteTask: deleteTaskHandler,

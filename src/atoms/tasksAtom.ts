@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { Task } from "@/models/tasks.ts";
+import { Task, TaskSearchInfoList } from "@/models/tasks.ts";
 import { Pagination } from "@/models/pagination.ts";
 
 export const tasksAtom = atom<Task[]>([]);
@@ -12,4 +12,12 @@ export const paginationAtom = atom<Pagination>({
   totalItems: 0,
   totalPages: 0,
   listLength: 0,
+});
+export const searchInfoListAtom = atom<TaskSearchInfoList>({
+  title: '',
+  types: '',
+  statuses: '',
+  priorities: '',
+  sortBy: '',
+  sortOrder: '',
 });

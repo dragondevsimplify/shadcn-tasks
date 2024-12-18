@@ -10,17 +10,10 @@ import { TasksTable } from "@/components/tasks/tasks-table.tsx";
 import { columns } from "@/components/tasks/tasks-columns.tsx";
 import { TasksAdd } from "./tasks-add";
 import { TasksPagination } from "@/components/tasks/tasks-pagination.tsx";
+import { TasksToolbox } from "@/components/tasks/tasks-toolbox.tsx";
 
 function Tasks() {
-  const { tasks, isLoading, error } = useTasks();
-  
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-  
-  if (error instanceof Error) {
-    return <div>Error: {error.message}</div>
-  }
+  const { tasks } = useTasks();
   
   return (
     <Card>
@@ -36,6 +29,7 @@ function Tasks() {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <TasksToolbox />
         <TasksTable columns={columns} data={tasks ?? []} />
         <TasksPagination />
       </CardContent>
